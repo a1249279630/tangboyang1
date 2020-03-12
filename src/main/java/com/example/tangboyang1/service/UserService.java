@@ -1,11 +1,14 @@
 package com.example.tangboyang1.service;
 
+import com.example.tangboyang1.dto.LoginDTO;
+import com.example.tangboyang1.dto.ResultDTO;
 import com.example.tangboyang1.pojo.User;
 import com.example.tangboyang1.request.UserRequest.RegistUserRequest;
 //import com.example.tangboyang1.request.UserRequest.UpdateUserPasswardRequest;
 //import com.example.tangboyang1.request.UserRequest.UpdateUserRequest;
 import com.example.tangboyang1.request.UserRequest.UpdateUserPasswardRequest;
 import com.example.tangboyang1.request.UserRequest.UpdateUserRequest;
+import com.example.tangboyang1.response.FindAllUserResponse;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,9 +21,9 @@ public interface UserService {
 
     Integer deleteUser(Integer id);
 
-    Integer updateUser(HttpServletRequest request,UpdateUserRequest updateUserRequest, Integer id);
+    Integer updateUser( UpdateUserRequest updateUserRequest);
 
-    List<User> findAllUser(Integer pageNumber, Integer pageSize);
+    List<FindAllUserResponse> findAllUser(Integer pageNumber, Integer pageSize);
 
     Integer updateState(String activeCode);
 //
@@ -30,15 +33,15 @@ public interface UserService {
 
     List<User> findUserByActiveCode(String activeCode);
 
-    Integer updateUserPassword(HttpServletRequest request,UpdateUserPasswardRequest updateUserPasswardRequest);
+    Integer updateUserPassword(UpdateUserPasswardRequest updateUserPasswardRequest);
 
     Integer updateUserRole(String userrole, Integer id);
 
-    User findUserByOpenid(String openid);
+    ResultDTO findUserByOpenid(LoginDTO loginDTO);
 
     Integer saveOrUpdate(User user);
 
-    User FindUserByToken(String token);
+//    User FindUserByToken(String token);
 
 //    String findUserByUserNameandPassword(LoginUserRequest loginUser);
 }

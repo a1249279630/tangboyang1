@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface ShoppingCartService {
-    Integer addShoppingCart(AddShoppingcartRequest addShoppingcartRequest, Integer id);
+    Integer addShoppingCart(AddShoppingcartRequest addShoppingcartRequest);
     Integer deleteShoppingCart(Integer id);
 
     Integer updateShoppingCart(ShoppingCart user);
@@ -17,9 +17,9 @@ public interface ShoppingCartService {
 
     ShoppingCart findshopByid(Integer id);
 
-    List<ShoppingCart> findshopByUserid(Integer userid);
+    List<ShoppingCart> findshopByUserid();
 
-    Integer deleteShopByUserid(Integer userid);
+    Integer deleteShopByUserid();
 
     /*通过id减少购物车产品的数量*/
     Integer updateReducePNum(int num, Integer id);

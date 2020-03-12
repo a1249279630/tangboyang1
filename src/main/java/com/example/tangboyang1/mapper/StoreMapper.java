@@ -4,6 +4,7 @@ import com.example.tangboyang1.pojo.Store;
 import com.example.tangboyang1.pojo.StoreExample;
 import java.util.List;
 
+import com.example.tangboyang1.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 @Mapper
@@ -29,4 +30,6 @@ public interface StoreMapper {
     int updateByPrimaryKeySelective(Store record);
 
     int updateByPrimaryKey(Store record);
+
+    User findUserByTolen(@Param("token")String token);
 }

@@ -15,10 +15,12 @@ import java.util.Map;
 @Component
 public class WechatAdapter {
 
+//    private  static String appid="wx37c1e8b4dd2c72c4";
     private  static String appid="wxf443534117ab8eae";
 
     private  static String secret="9b5cd3d2ad0588509d4628b2e285b945";
 
+//    private  static String secret="3332e9e4d5d5f9e5c262738a42c4da93";
 
 
     public SessionDTO jscode2session(String code) {
@@ -37,12 +39,13 @@ public class WechatAdapter {
 
             map.put( "session_key",session_key);
             map.put( "openId",openid );
+            System.out.println(session_key+"                              "+openid);
             SessionDTO sessionDTO=new SessionDTO();
             sessionDTO.setOpenid(openid);
             sessionDTO.setSessionKey(session_key);
             return sessionDTO;
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             throw new ErrorCodeException(CommonErrorCode.OBTAIN_OPENID_ERROR);
         }
     }

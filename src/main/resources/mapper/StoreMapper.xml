@@ -206,6 +206,13 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <select id="findUserByTolen" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from t_user
+    where token =#{token,jdbcType=VARCHAR}
+  </select>
+
+
   <update id="updateByPrimaryKeySelective" parameterType="com.example.tangboyang1.pojo.Store">
     update t_store
     <set>

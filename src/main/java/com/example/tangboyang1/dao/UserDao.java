@@ -76,9 +76,10 @@ public class UserDao {
         return null;
     }
 
-    public List<User> FindUserByToken(String token) {
+    /*public List<User> FindUserByToken(String token) {
         UserExample userExample=new UserExample();
         userExample.createCriteria().andTokenEqualTo(token);
+
         return userMapper.selectByExample(userExample);
-    }
+    }*/
 }

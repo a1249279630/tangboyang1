@@ -10,13 +10,13 @@ import lombok.Data;
 @Data
 public class ResultDTO {
     private Integer status;
-    private Object data;
+    private String token;
     private String message;
 
-    public static ResultDTO ok(Object data) {
+    public static ResultDTO ok(String data) {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setStatus(200);
-        resultDTO.setData(data);
+        resultDTO.setToken(data);
         resultDTO.setMessage("请求成功");
         return resultDTO;
     }

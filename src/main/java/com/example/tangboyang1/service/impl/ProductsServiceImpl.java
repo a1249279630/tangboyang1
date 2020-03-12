@@ -1,10 +1,13 @@
 package com.example.tangboyang1.service.impl;
 
+import com.example.tangboyang1.dao.ImageDao;
 import com.example.tangboyang1.dao.ProductDao;
+import com.example.tangboyang1.pojo.Image;
 import com.example.tangboyang1.pojo.Products;
 import com.example.tangboyang1.request.ProductRequest.AddProductsRequest;
 import com.example.tangboyang1.request.ProductRequest.UpdateProductsRequest;
 import com.example.tangboyang1.response.FindCategoryAndCategoryid;
+import com.example.tangboyang1.response.FindImageResponse;
 import com.example.tangboyang1.response.FindProductResponse;
 import com.example.tangboyang1.service.ProductsService;
 import com.github.pagehelper.PageHelper;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
 public class ProductsServiceImpl implements ProductsService {
     @Autowired
     private ProductDao productDao;
+    @Autowired
+    private ImageDao imageDao;
     @Override
     public Integer addProducts(AddProductsRequest apr) {
         DecimalFormat num = new DecimalFormat("#.00");
@@ -38,21 +44,36 @@ public class ProductsServiceImpl implements ProductsService {
             products.setCategoryId(productByCategory.get(0).getCategoryId());
         }
 
+        String imgurs = apr.getImgurl();
+        String[] split = imgurs.split("\\,");
+        String uuid=UUID.randomUUID().toString();
+        for (String s:split) {
+            Image image=new Image();
+            image.setProductsUuid(uuid);
+            image.setImagurl(s);
+            imageDao.AddImage(image);
+        }
         products.setCategory(apr.getCategory());
         products.setPnum(apr.getPnum());
         products.setDescription(apr.getDescription());
-        products.setImgurl(apr.getImgurl());
+        products.setImgurl(String.valueOf(split.length));
         products.setName(apr.getName());
         products.setPrice(apr.getPrice());
         products.setCreattime(new Date());
         products.setCurrentprice(apr.getPrice()-n);
         products.setStoreId(1);
+        products.setUuid(uuid);
         return productDao.addProducts(products);
     }
 
     @Override
     public Integer deleteProducts(Integer id) {
-        return productDao.deleteProducts(id);
+        Products bookById = productDao.findBookById(id);
+        Integer integer = imageDao.deleteImageByUuid(bookById.getUuid());
+        if(integer==1){
+            return productDao.deleteProducts(id);
+        }
+        return -1;
     }
 
     @Override
@@ -72,6 +93,7 @@ public class ProductsServiceImpl implements ProductsService {
     public List<FindProductResponse> findAllProducts(Integer pageNumber,Integer pageSize) {
         PageHelper.startPage(pageNumber,pageSize);
         List<Products> all=productDao.findAllProducts("121");
+
         List<FindProductResponse> findProductResponses = ShowFindProductResponse(all);
         PageInfo<FindProductResponse> pageInfo=new PageInfo<>(findProductResponses);
 
@@ -81,7 +103,8 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public Integer updatePNum(int num, Integer id) {
-        return productDao.updatePNum(num,id);
+//        return productDao.updatePNum(num,id);
+        return null;
     }
 
     @Override
@@ -92,9 +115,13 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public FindProductResponse findBookById(Integer id) {
         Products bookById = productDao.findBookById(id);
-        FindProductResponse findProductResponse=new FindProductResponse();
-        BeanUtils.copyProperties(bookById,findProductResponse);
-        return  findProductResponse;
+        List<Products> products=new ArrayList<>();
+        products.add(bookById);
+//        FindProductResponse findProductResponse=new FindProductResponse();
+//        BeanUtils.copyProperties(bookById,findProductResponse);
+        List<FindProductResponse> findProductResponses = ShowFindProductResponse(products);
+
+        return  findProductResponses.get(0);
     }
 
     @Override
@@ -131,15 +158,12 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public List<FindProductResponse> RandomBook() {
         List<Products> all=productDao.findAllProducts("121");
-        System.out.println(all.toString());
         List<Products> all2 = new ArrayList<>();
         int size = all.size();
         System.out.println(size);
         for(int i=0;i<6;i++){
             try {
                 int v =(int) (Math.random() * size);
-                System.out.println(v);
-                System.out.println(all.get(v));
                 all2.add(all.get(v));
                 all.remove(v);
                 size=size-1;
@@ -151,9 +175,23 @@ public class ProductsServiceImpl implements ProductsService {
 
     private List<FindProductResponse> ShowFindProductResponse(List<Products> products) {
         List<FindProductResponse> productResponseList=new ArrayList<>();
+
         for(Products product:products){
             FindProductResponse findProductResponse=new FindProductResponse();
             BeanUtils.copyProperties(product,findProductResponse);
+//            if(product.getUuid()==null||!product.getUuid().equals("")) {
+//            if(!product.getUuid().isEmpty()){
+            try{
+                List<Image> images = imageDao.FindimageByProductUuid(product.getUuid());
+                List<FindImageResponse> findImageResponses=new ArrayList<>();
+                for (Image f:images) {
+                    FindImageResponse findImageResponse=new FindImageResponse();
+                    findImageResponse.setId(f.getId());
+                    findImageResponse.setImagurl(f.getImagurl());
+                    findImageResponses.add(findImageResponse);
+                }
+                findProductResponse.setImages(findImageResponses);
+            }catch (Exception e){}
             productResponseList.add(findProductResponse);
         }
         return productResponseList;

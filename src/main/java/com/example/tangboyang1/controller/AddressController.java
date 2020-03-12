@@ -1,18 +1,18 @@
-package com.example.tangboyang1.controller;/*
-package com.example.tangboyang.controller;
+package com.example.tangboyang1.controller;
 
-import com.example.tangboyang.pojo.Address;
-import com.example.tangboyang.request.AddAddressRequest;
-import com.example.tangboyang.service.AddressService;
+import com.example.tangboyang1.pojo.Address;
+import com.example.tangboyang1.request.AddressRequest.AddAddressRequest;
+import com.example.tangboyang1.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("AddressController")
 public class AddressController {
     @Autowired
-private AddressService addressService;
+    private AddressService addressService;
 
 
     @PostMapping(value = "find/allAddress")
@@ -23,18 +23,17 @@ private AddressService addressService;
 
 
     @PostMapping(value = "add/Address/by/json")
-    public Integer addAddressByJson(@RequestBody AddAddressRequest addAddressRequest, int id){
-        return addressService.addAddress(addAddressRequest,id);
+    public Integer addAddressByJson(@RequestBody AddAddressRequest addAddressRequest){
+        return addressService.addAddress(addAddressRequest);
     }
-//
-//
+
     @DeleteMapping(value = "delete/address/by/id")
     public Integer deleteAddress(@RequestBody Integer id) {
         return addressService.deleteAddress(id);
     }
 
-   */
-/* @PostMapping(value = "update/address/by/id")
+
+@PostMapping(value = "update/address/by/id")
     public Integer updateAddressByid(@RequestBody AddAddressRequest addAddressRequest) {
         return addressService.updateAddressByid(addAddressRequest);
     }
@@ -47,12 +46,6 @@ private AddressService addressService;
     @GetMapping(value = "find/address/by/userid")
     public List<Address> findAddressByUserid(@RequestBody Integer userid) {
         return addressService.findAddressByUserid(userid);
-    }*//*
+    }
 
 }
-
-
-
-
-
-*/

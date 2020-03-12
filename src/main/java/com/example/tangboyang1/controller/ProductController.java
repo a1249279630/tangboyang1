@@ -7,6 +7,7 @@ import com.example.tangboyang1.response.FindProductResponse;
 import com.example.tangboyang1.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @Component
 @RestController
+@Transactional(rollbackFor = Exception.class)
+@RequestMapping("ProductController")
 public class ProductController {
     @Autowired
     private ProductsService productsService;
@@ -34,7 +37,7 @@ public class ProductController {
     }
 
     @DeleteMapping(value = "delete/Book/by/id")
-    public Integer deleteProduct(@RequestBody Integer id) {
+    public Integer deleteProduct(Integer id) {
         return productsService.deleteProducts(id);
     }
 
@@ -43,17 +46,17 @@ public class ProductController {
         return productsService.updateProducts(updateProductsRequest,id);
     }
 
-    @PostMapping(value = "update/BookNum/by/id")
-    public Integer updatePNum(@RequestBody int num, Integer id) {
-        return productsService.updatePNum(num,id);
-    }
+//    @PostMapping(value = "update/BookNum/by/id")
+//    public Integer updatePNum(int num, Integer id) {
+//        return productsService.updatePNum(num,id);
+//    }
 
     @GetMapping(value = "select/count")
-    public long count(@RequestBody String category) {
+    public long count( String category) {
         return productsService.count(category);
     }
 
-    @GetMapping(value = "select/Book/by/id")
+    @GetMapping(value = "select/Book/by/Bookid")
     public FindProductResponse findBookById(Integer id) {
         return productsService.findBookById(id);
     }

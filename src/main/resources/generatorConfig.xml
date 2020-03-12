@@ -70,9 +70,16 @@
 <!--        <table tableName="t_products" domainObjectName="Products">-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="t_user" domainObjectName="User">
+
+        <table tableName="t_comment" domainObjectName="Comment">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
+       <!-- <table tableName="t_user" domainObjectName="User">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>-->
+<!--        <table tableName="t_image" domainObjectName="Image">-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
         <!-- 有些表的字段需要指定java类型
          <table schema="" tableName="">
             <columnOverride column="" javaType="" />

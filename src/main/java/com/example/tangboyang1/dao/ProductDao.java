@@ -23,7 +23,7 @@ public class ProductDao {
     }
 
     public Integer addProducts(Products products){
-        return productsMapper.insert(products);
+        return productsMapper.insertSelective(products);
     }
 
     public Integer deleteProducts(Integer id){
@@ -35,10 +35,10 @@ public class ProductDao {
 
     public Products findBookById(Integer id)  {
         Products products = productsMapper.selectByPrimaryKey(id);
-        if(products.toString().isEmpty()){
+        if(products==null||products.equals("")){
             return null;
-        }return products;
-
+        }
+        return products;
     }
 
     //category 如果是null，是表的所所有记录数
@@ -48,16 +48,16 @@ public class ProductDao {
         return productsMapper.countByExample(productsExample);
     }
 
-    public Integer updatePNum(int num,Integer id) {
-
-        Products products = productsMapper.selectByPrimaryKey(id);
-        if(products.getPnum()>num&&products.getPnum()>0){
-            products.setPnum(products.getPnum()-num);
-        }else{
-            new Exception("数量不够");
-        }
-        return productsMapper.updateByPrimaryKey(products);
-    }
+//    public Integer updatePNum(int num,Integer id) {
+//
+//        Products products = productsMapper.selectByPrimaryKey(id);
+//        if(products.getPnum()>num&&products.getPnum()>0){
+//            products.setPnum(products.getPnum()-num);
+//        }else{
+//            new Exception("数量不够");
+//        }
+//        return productsMapper.updateByPrimaryKey(products);
+//    }
 
     public List<Products> findBookByName(String bookname) {
         ProductsExample productsExample=new ProductsExample();

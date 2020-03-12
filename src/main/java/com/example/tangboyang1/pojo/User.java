@@ -1,5 +1,7 @@
 package com.example.tangboyang1.pojo;
 
+import lombok.Data;
+
 import java.util.Date;
 
 public class User {
@@ -127,6 +129,25 @@ public class User {
 
     public String getToken() {
         return token;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", openId='" + openId + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", gender='" + gender + '\'' +
+                ", email='" + email + '\'' +
+                ", telephone='" + telephone + '\'' +
+                ", introduce='" + introduce + '\'' +
+                ", activecode='" + activecode + '\'' +
+                ", state=" + state +
+                ", role='" + role + '\'' +
+                ", registtime=" + registtime +
+                ", token='" + token + '\'' +
+                '}';
     }
 
     public void setToken(String token) {

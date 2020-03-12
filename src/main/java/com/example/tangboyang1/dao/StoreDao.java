@@ -13,7 +13,7 @@ public class StoreDao {
     @Autowired
     private StoreMapper storeMapper;
 
-    public List<Store> findStoreByid(Integer id) {
+    public List<Store> findStoreByUserid(Integer id) {
         StoreExample storeExample=new StoreExample();
         storeExample.createCriteria().andUserIdEqualTo(id);
         return storeMapper.selectByExample(storeExample);
@@ -23,5 +23,6 @@ public class StoreDao {
     public Integer addStore(Store store){
         return storeMapper.insert(store);
     }
+
 
 }

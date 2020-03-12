@@ -5,6 +5,4 @@ import lombok.Data;
 public class TokenDto {
     private String token;
 
-
-
 }

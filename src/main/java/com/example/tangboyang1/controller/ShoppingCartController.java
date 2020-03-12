@@ -1,5 +1,7 @@
 package com.example.tangboyang1.controller;//package com.example.tangboyang.controller;
 
+import com.example.tangboyang1.dto.ResultDTO;
+import com.example.tangboyang1.error.CommonErrorCode;
 import com.example.tangboyang1.pojo.ShoppingCart;
 import com.example.tangboyang1.request.ShoppingRequest.AddShoppingcartRequest;
 import com.example.tangboyang1.service.ShoppingCartService;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("ShoppingCartController")
 public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
@@ -32,9 +35,14 @@ public class ShoppingCartController {
      * @param
      * @return
      */
-    @PostMapping(value = "add/shoppingCart/by/json")
-    public Integer addShoppingCartByJson(@RequestBody AddShoppingcartRequest addShoppingcartRequest,Integer id){
-        return shoppingCartService.addShoppingCart(addShoppingcartRequest,id);
+    @PostMapping(value = "add/shoppingCart")
+    public ResultDTO addShoppingCartBy( AddShoppingcartRequest addShoppingcartRequest){
+        Integer integer = shoppingCartService.addShoppingCart(addShoppingcartRequest);
+        if(integer==1){
+            return ResultDTO.ok("添加成功");
+        }else {
+            return ResultDTO.fail(CommonErrorCode.INVALID_PARAMS);
+        }
     }
 
     @DeleteMapping(value = "delete/shoppingCart/by/id")
@@ -52,14 +60,14 @@ public class ShoppingCartController {
         return shoppingCartService.findshopByid(id);
     }
 
-    @GetMapping(value = "find/shopping/by/userid")
-    public List<ShoppingCart> findshopByUserid(Integer userid) {
-        return shoppingCartService.findshopByUserid(userid);
+    @GetMapping(value = "find/Allshopping/by/userid")
+    public List<ShoppingCart> findshopByUserid() {
+        return shoppingCartService.findshopByUserid();
     }
 
-    @DeleteMapping(value = "delete/shopping/by/userid")
-    public Integer deleteShopByUserid(Integer userid) {
-        return shoppingCartService.deleteShopByUserid(userid);
+    @DeleteMapping(value = "delete/Allshopping/by/userid")
+    public Integer deleteShopByUserid() {
+        return shoppingCartService.deleteShopByUserid();
     }
 
     @PostMapping(value = "update/shoppingReducenum/by/id")

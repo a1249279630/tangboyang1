@@ -8,7 +8,9 @@ import java.util.List;
 
 @Service
 public interface AddressService {
-    Integer addAddress(AddAddressRequest addAddressRequest, int id);
+    Integer addAddress(AddAddressRequest addAddressRequest);
+
+
     Integer deleteAddress(Integer id);
 
 //    Integer updateAddress(Address address);
