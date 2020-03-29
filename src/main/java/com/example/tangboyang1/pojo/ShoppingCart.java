@@ -1,7 +1,9 @@
 package com.example.tangboyang1.pojo;
 
-import java.util.Date;
+import lombok.Data;
 
+import java.util.Date;
+@Data
 public class ShoppingCart {
     private Integer id;
 
@@ -16,6 +18,12 @@ public class ShoppingCart {
     private Date creattime;
 
     private Double muney;
+
+    private Double productPrice;
+
+    private String productImage;
+
+    private String productDes;
 
     public Integer getId() {
         return id;
@@ -71,5 +79,29 @@ public class ShoppingCart {
 
     public void setMuney(Double muney) {
         this.muney = muney;
+    }
+
+    public Double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(Double productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage == null ? null : productImage.trim();
+    }
+
+    public String getProductDes() {
+        return productDes;
+    }
+
+    public void setProductDes(String productDes) {
+        this.productDes = productDes == null ? null : productDes.trim();
     }
 }
