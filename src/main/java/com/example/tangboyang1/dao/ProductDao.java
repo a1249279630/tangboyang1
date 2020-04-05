@@ -3,6 +3,7 @@ package com.example.tangboyang1.dao;
 import com.example.tangboyang1.mapper.ProductsMapper;
 import com.example.tangboyang1.pojo.Products;
 import com.example.tangboyang1.pojo.ProductsExample;
+import com.example.tangboyang1.pojo.ShoppingCart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -89,6 +90,7 @@ public class ProductDao {
         return productsMapper.selectByExample(productsExample);
 
     }
+
 
 //    public List<Products> RandomBook() {
 //        return productDao.findAllProducts("121");

@@ -12,7 +12,6 @@ public class ResultDTO {
     private Integer status;
     private String token;
     private String message;
-
     public static ResultDTO ok(String data) {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setStatus(200);

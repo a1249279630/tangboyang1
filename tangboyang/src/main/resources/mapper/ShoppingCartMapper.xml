@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.tangboyang1.mapper.ShoppingCartMapper">
+  <resultMap id="BaseResultMap" type="com.example.tangboyang1.pojo.ShoppingCart">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="products_id" jdbcType="INTEGER" property="productsId" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="creattime" jdbcType="TIMESTAMP" property="creattime" />
+    <result column="muney" jdbcType="DOUBLE" property="muney" />
+    <result column="product_price" jdbcType="DOUBLE" property="productPrice" />
+    <result column="product_image" jdbcType="VARCHAR" property="productImage" />
+    <result column="product_des" jdbcType="VARCHAR" property="productDes" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, user_id, store_id, products_id, num, creattime, muney, product_price, product_image, 
+    product_des
+  </sql>
+  <select id="selectByExample" parameterType="com.example.tangboyang1.pojo.ShoppingCartExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_shoppingcart
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_shoppingcart
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_shoppingcart
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <select id="findShopcartByUseridAndProductid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_shoppingcart
+    where user_id =#{id,jdbcType=VARCHAR} and products_id = #{productsId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByExample" parameterType="com.example.tangboyang1.pojo.ShoppingCartExample">
+    delete from t_shoppingcart
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.example.tangboyang1.pojo.ShoppingCart">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_shoppingcart (user_id, store_id, products_id, 
+      num, creattime, muney, 
+      product_price, product_image, product_des
+      )
+    values (#{userId,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{productsId,jdbcType=INTEGER}, 
+      #{num,jdbcType=INTEGER}, #{creattime,jdbcType=TIMESTAMP}, #{muney,jdbcType=DOUBLE}, 
+      #{productPrice,jdbcType=DOUBLE}, #{productImage,jdbcType=VARCHAR}, #{productDes,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.example.tangboyang1.pojo.ShoppingCart">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_shoppingcart
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="storeId != null">
+        store_id,
+      </if>
+      <if test="productsId != null">
+        products_id,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="creattime != null">
+        creattime,
+      </if>
+      <if test="muney != null">
+        muney,
+      </if>
+      <if test="productPrice != null">
+        product_price,
+      </if>
+      <if test="productImage != null">
+        product_image,
+      </if>
+      <if test="productDes != null">
+        product_des,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="productsId != null">
+        #{productsId,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="creattime != null">
+        #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="muney != null">
+        #{muney,jdbcType=DOUBLE},
+      </if>
+      <if test="productPrice != null">
+        #{productPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="productImage != null">
+        #{productImage,jdbcType=VARCHAR},
+      </if>
+      <if test="productDes != null">
+        #{productDes,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.example.tangboyang1.pojo.ShoppingCartExample" resultType="java.lang.Long">
+    select count(*) from t_shoppingcart
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update t_shoppingcart
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.storeId != null">
+        store_id = #{record.storeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.productsId != null">
+        products_id = #{record.productsId,jdbcType=INTEGER},
+      </if>
+      <if test="record.num != null">
+        num = #{record.num,jdbcType=INTEGER},
+      </if>
+      <if test="record.creattime != null">
+        creattime = #{record.creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.muney != null">
+        muney = #{record.muney,jdbcType=DOUBLE},
+      </if>
+      <if test="record.productPrice != null">
+        product_price = #{record.productPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.productImage != null">
+        product_image = #{record.productImage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productDes != null">
+        product_des = #{record.productDes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update t_shoppingcart
+    set id = #{record.id,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      store_id = #{record.storeId,jdbcType=INTEGER},
+      products_id = #{record.productsId,jdbcType=INTEGER},
+      num = #{record.num,jdbcType=INTEGER},
+      creattime = #{record.creattime,jdbcType=TIMESTAMP},
+      muney = #{record.muney,jdbcType=DOUBLE},
+      product_price = #{record.productPrice,jdbcType=DOUBLE},
+      product_image = #{record.productImage,jdbcType=VARCHAR},
+      product_des = #{record.productDes,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.tangboyang1.pojo.ShoppingCart">
+    update t_shoppingcart
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null">
+        store_id = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="productsId != null">
+        products_id = #{productsId,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="creattime != null">
+        creattime = #{creattime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="muney != null">
+        muney = #{muney,jdbcType=DOUBLE},
+      </if>
+      <if test="productPrice != null">
+        product_price = #{productPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="productImage != null">
+        product_image = #{productImage,jdbcType=VARCHAR},
+      </if>
+      <if test="productDes != null">
+        product_des = #{productDes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.example.tangboyang1.pojo.ShoppingCart">
+    update t_shoppingcart
+    set user_id = #{userId,jdbcType=INTEGER},
+      store_id = #{storeId,jdbcType=INTEGER},
+      products_id = #{productsId,jdbcType=INTEGER},
+      num = #{num,jdbcType=INTEGER},
+      creattime = #{creattime,jdbcType=TIMESTAMP},
+      muney = #{muney,jdbcType=DOUBLE},
+      product_price = #{productPrice,jdbcType=DOUBLE},
+      product_image = #{productImage,jdbcType=VARCHAR},
+      product_des = #{productDes,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

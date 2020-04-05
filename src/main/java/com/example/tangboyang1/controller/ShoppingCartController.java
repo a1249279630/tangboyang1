@@ -2,6 +2,7 @@ package com.example.tangboyang1.controller;//package com.example.tangboyang.cont
 
 import com.example.tangboyang1.dto.ResultDTO;
 import com.example.tangboyang1.error.CommonErrorCode;
+import com.example.tangboyang1.error.ErrorCodeException;
 import com.example.tangboyang1.pojo.ShoppingCart;
 import com.example.tangboyang1.request.ShoppingRequest.AddShoppingcartRequest;
 import com.example.tangboyang1.service.ShoppingCartService;
@@ -16,7 +17,7 @@ public class ShoppingCartController {
     @Autowired
     private ShoppingCartService shoppingCartService;
     @PostMapping(value = "find/all/ShoppingCart")
-    public List<ShoppingCart> findAllUser(@RequestBody Integer pageNumber, Integer pageSize){
+    public List<ShoppingCart> findAllUser( Integer pageNumber, Integer pageSize){
 
         return shoppingCartService.findAllShoppingCart(pageNumber,pageSize);
     }
@@ -37,16 +38,23 @@ public class ShoppingCartController {
      */
     @PostMapping(value = "add/shoppingCart")
     public ResultDTO addShoppingCartBy( AddShoppingcartRequest addShoppingcartRequest){
+
+
         Integer integer = shoppingCartService.addShoppingCart(addShoppingcartRequest);
         if(integer==1){
             return ResultDTO.ok("添加成功");
+        }else if (integer==-3){
+            throw new ErrorCodeException(CommonErrorCode.Product_id_Error);
+        }else if(integer==-2){
+            throw new ErrorCodeException(CommonErrorCode.Product_Num_Error);
         }else {
-            return ResultDTO.fail(CommonErrorCode.INVALID_PARAMS);
+            throw new ErrorCodeException(CommonErrorCode.INVALID_PARAMS);
         }
     }
 
     @DeleteMapping(value = "delete/shoppingCart/by/id")
     public Integer deleteShoppingCart(@RequestBody Integer id) {
+
         return shoppingCartService.deleteShoppingCart(id);
     }
 
@@ -62,6 +70,7 @@ public class ShoppingCartController {
 
     @GetMapping(value = "find/Allshopping/by/userid")
     public List<ShoppingCart> findshopByUserid() {
+        System.out.println("sdf");
         return shoppingCartService.findshopByUserid();
     }
 

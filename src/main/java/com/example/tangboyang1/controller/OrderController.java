@@ -3,6 +3,7 @@ package com.example.tangboyang1.controller;//package com.example.tangboyang.cont
 import com.example.tangboyang1.dto.ResultDTO;
 import com.example.tangboyang1.pojo.Orders;
 import com.example.tangboyang1.request.OrderRequest.AddOrdersRequest;
+import com.example.tangboyang1.response.FindAllUserOrderResponse;
 import com.example.tangboyang1.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @GetMapping(value = "find/all/order")
-    public List<Orders> findAllOrders(Integer PageNumber,Integer PageSize){
+    public List<FindAllUserOrderResponse> findAllOrders(Integer PageNumber,Integer PageSize){
         return orderService.findAllOrder(PageNumber,PageSize);
     }
 
@@ -55,12 +56,12 @@ public class OrderController {
     }
 
     @GetMapping(value = "find/orders/by/Orderid")
-    public Orders findOrderByOrderId(Integer orderId) {
+    public FindAllUserOrderResponse findOrderByOrderId(Integer orderId) {
         return orderService.findOrderByOrderId(orderId);
     }
 
     @GetMapping(value = "find/order/by/Userid")
-    public List<Orders> findOrdersByUserId( ){
+    public List<FindAllUserOrderResponse> findOrdersByUserId( ){
         return orderService.findOrdersByUserId();
     }
 }

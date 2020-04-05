@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @GetMapping(value = "fing/user/by/usernameAndpassward")
-    public ResultDTO findUserByUserNameandPassword(String username, String passward) {
+    public ResultDTO1 findUserByUserNameandPassword(String username, String passward) {
         return userService.findUserByUserNameandPassword(username, passward);
 
     }

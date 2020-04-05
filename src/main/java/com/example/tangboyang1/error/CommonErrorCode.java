@@ -12,6 +12,7 @@ public enum CommonErrorCode implements IErrorCode {
     SIGNATURE_ERROR(1006, "验证失败，传递信息有误"),
     Token_Errop(1007,"token过期或错误，请重新登录"),
     Product_Num_Error(1008,"库存量不足"),
+    Product_id_Error(1009,"产品id不存在"),
     ;
 
     private Integer code;

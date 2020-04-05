@@ -3,6 +3,7 @@ package com.example.tangboyang1.service;
 import com.example.tangboyang1.dto.ResultDTO;
 import com.example.tangboyang1.pojo.Orders;
 import com.example.tangboyang1.request.OrderRequest.AddOrdersRequest;
+import com.example.tangboyang1.response.FindAllUserOrderResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +15,13 @@ public interface OrderService {
 
     Integer updateOrder(Orders orders);
 
-    List<Orders> findAllOrder(Integer PageNumber, Integer PageSize);
+    List<FindAllUserOrderResponse> findAllOrder(Integer PageNumber, Integer PageSize);
 
     Integer deleteOrdersByUserid();
 
-    Orders findOrderByOrderId(Integer OrderId);
+    FindAllUserOrderResponse findOrderByOrderId(Integer OrderId);
 
-    List<Orders> findOrdersByUserId();
+    List<FindAllUserOrderResponse> findOrdersByUserId();
 
     Integer updateOrderpaystateByid(Integer id);
 }

@@ -2,6 +2,7 @@ package com.example.tangboyang1.service;
 
 import com.example.tangboyang1.dto.LoginDTO;
 import com.example.tangboyang1.dto.ResultDTO;
+import com.example.tangboyang1.dto.ResultDTO1;
 import com.example.tangboyang1.pojo.User;
 import com.example.tangboyang1.request.UserRequest.RegistUserRequest;
 import com.example.tangboyang1.request.UserRequest.UpdateUserPasswardRequest;
@@ -29,7 +30,7 @@ public interface UserService {
 //
     User findUserById(int id);
 //
-    ResultDTO findUserByUserNameandPassword(String userName, String password);
+    ResultDTO1 findUserByUserNameandPassword(String userName, String password);
 
     List<User> findUserByActiveCode(String activeCode);
 

@@ -9,14 +9,17 @@ import com.example.tangboyang1.pojo.Orders;
 import com.example.tangboyang1.pojo.Products;
 import com.example.tangboyang1.pojo.User;
 import com.example.tangboyang1.request.OrderRequest.AddOrdersRequest;
+import com.example.tangboyang1.response.FindAllUserOrderResponse;
 import com.example.tangboyang1.service.OrderService;
 import com.example.tangboyang1.session.SessionUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +53,6 @@ public class OrderServiceImpl implements OrderService {
         }catch (ErrorCodeException e){
             e.printStackTrace();
             throw new ErrorCodeException(CommonErrorCode.Product_Num_Error);
-
         }catch (Exception e){
             e.printStackTrace();
             throw new ErrorCodeException(CommonErrorCode.UNKOWN_ERROR);
@@ -79,10 +81,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Orders> findAllOrder(Integer PageNumber,Integer PageSize) {
+    public List<FindAllUserOrderResponse> findAllOrder(Integer PageNumber,Integer PageSize) {
         PageHelper.startPage(PageNumber,PageSize);
         List<Orders> all=orderDao.findAllOrders();
-        PageInfo<Orders> pageInfo=new PageInfo<>(all);
+        List<FindAllUserOrderResponse> findAllUserOrderResponses = ShowOrder(all);
+        PageInfo<FindAllUserOrderResponse> pageInfo=new PageInfo<>(findAllUserOrderResponses);
         return pageInfo.getList();
     }
 
@@ -101,14 +104,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Orders findOrderByOrderId(Integer orderId) {
-        return orderDao.findOrderByOrderId(orderId);
+    public FindAllUserOrderResponse findOrderByOrderId(Integer orderId) {
+        Orders orderByOrderId = orderDao.findOrderByOrderId(orderId);
+        List<Orders> orders=new ArrayList<>();
+        orders.add(orderByOrderId);
+        List<FindAllUserOrderResponse> findAllUserOrderResponses = ShowOrder(orders);
+        return findAllUserOrderResponses.get(0);
     }
 
     @Override
-    public List<Orders> findOrdersByUserId() {
+    public List<FindAllUserOrderResponse> findOrdersByUserId() {
         User user = SessionUtil.getUser();
-        return orderDao.findOrdersByUserId(user.getId());
+        List<Orders> ordersByUser = orderDao.findOrdersByUserId(user.getId());
+        return ShowOrder(ordersByUser);
     }
 
     @Override
@@ -116,5 +124,20 @@ public class OrderServiceImpl implements OrderService {
         Orders order = orderDao.findOrderByOrderId(id);
         order.setPaystate(1);
         return orderDao.updateOrders(order);
+    }
+
+
+    public List<FindAllUserOrderResponse> ShowOrder(List<Orders> orders){
+        List<FindAllUserOrderResponse> findAllUserOrderResponses= new ArrayList<>();
+        for (Orders o:orders) {
+            FindAllUserOrderResponse findAllUserOrderResponse=new FindAllUserOrderResponse();
+            BeanUtils.copyProperties(o,findAllUserOrderResponse);
+            Products bookBy = productDao.findBookById(o.getProductId());
+            findAllUserOrderResponse.setImgurl(bookBy.getImgurl());
+            BeanUtils.copyProperties(bookBy,findAllUserOrderResponse);
+            findAllUserOrderResponse.setId(o.getId());
+            findAllUserOrderResponses.add(findAllUserOrderResponse);
+        }
+        return findAllUserOrderResponses;
     }
 }

@@ -28,6 +28,7 @@ public class ProductController {
     @PostMapping(value = "add/product")
     public Integer addProduct(@RequestBody AddProductsRequest addProductsRequest){
         return productsService.addProducts(addProductsRequest);
+
     }
 
     /*通过产品名查找产品*/

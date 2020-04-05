@@ -1,6 +1,6 @@
 package com.example.tangboyang1.controller;
 
-import com.example.tangboyang1.pojo.Address;
+import com.example.tangboyang1.pojo;
 import com.example.tangboyang1.request.AddressRequest.AddAddressRequest;
 import com.example.tangboyang1.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;

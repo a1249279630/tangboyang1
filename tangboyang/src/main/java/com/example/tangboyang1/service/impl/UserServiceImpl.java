@@ -6,6 +6,7 @@ import com.example.tangboyang1.dao.StoreDao;
 import com.example.tangboyang1.dao.UserDao;
 import com.example.tangboyang1.dto.LoginDTO;
 import com.example.tangboyang1.dto.ResultDTO;
+import com.example.tangboyang1.dto.ResultDTO1;
 import com.example.tangboyang1.dto.SessionDTO;
 import com.example.tangboyang1.error.CommonErrorCode;
 import com.example.tangboyang1.error.ErrorCodeException;
@@ -124,7 +125,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResultDTO findUserByUserNameandPassword(String username, String password) {
+    public ResultDTO1 findUserByUserNameandPassword(String username, String password) {
         try {
         User user = userDao.findUserByUserNameandPassword111(username, password);
         String token= UUID.randomUUID().toString();
@@ -150,16 +151,16 @@ public class UserServiceImpl implements UserService {
                 List<Store> stores = storeDao.findStoreByUserid(user.getId());
                 Store store = stores.get(0);
                 String temp="可以上传商品";
-                return ResultDTO.ok("卖家用户"+token);
+                return ResultDTO1.ok(user);
             }
-            return ResultDTO.ok("普通用户"+token);
+            return ResultDTO1.ok(user);
         }else {
-            return ResultDTO.ok("管理员"+token);
+            return ResultDTO1.ok(user);
         }
         } catch (ErrorCodeException e) {
-            return ResultDTO.fail(e);
+            return ResultDTO1.fail(e);
         } catch (Exception e) {
-            return ResultDTO.fail(CommonErrorCode.UNKOWN_ERROR);
+            return ResultDTO1.fail(CommonErrorCode.UNKOWN_ERROR);
         }
     }
 
@@ -285,6 +286,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passward);
         Integer integer = userDao.updateUser(user);
                 if(integer==1){
+                    user.setRole("卖家用户");
+                    String tpstring=JsonUtils.objectToJson(user);
+                    stringRedisTemplate.opsForValue().set(user.getToken(),tpstring,2, TimeUnit.DAYS);
                     return ResultDTO.ok("成功");
                 }else {
                     throw new ErrorCodeException(CommonErrorCode.UNKOWN_ERROR);

@@ -29,7 +29,7 @@ public interface UserService {
 //
     User findUserById(int id);
 //
-    String findUserByUserNameandPassword(HttpServletRequest request, String userName, String password);
+    ResultDTO findUserByUserNameandPassword(String userName, String password);
 
     List<User> findUserByActiveCode(String activeCode);
 

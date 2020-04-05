@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -97,7 +98,6 @@ public class UserServiceImpl implements UserService {
         for (User u:all) {
             List<Store> store = storeDao.findStoreByUserid(u.getId());
             FindAllUserResponse response=new FindAllUserResponse();
-            System.out.println("-----------------------------------------------------------------");
             if(CollectionUtils.isEmpty(store)){
                 response.setStore(null);
             }else {
@@ -125,26 +125,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String findUserByUserNameandPassword(HttpServletRequest request,String username, String password) {
-
+    public ResultDTO findUserByUserNameandPassword(String username, String password) {
+        try {
         User user = userDao.findUserByUserNameandPassword111(username, password);
         String token= UUID.randomUUID().toString();
-        user.setToken(token);
-        userDao.updateUser(user);
+
         String tpstring=JsonUtils.objectToJson(user);
-//        BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
-//        StringRedisTemplate stringRedisTemplate = (StringRedisTemplate) factory.getBean("stringRedisTemplate");
-        stringRedisTemplate.opsForValue().set(token,tpstring,2, TimeUnit.DAYS);
+        if(!StringUtils.isEmpty(user.getToken())){
+            String value=stringRedisTemplate.opsForValue().get(user.getToken());
+            if(!StringUtils.isEmpty(value)){
+                stringRedisTemplate.opsForValue().set(user.getToken(),tpstring,2, TimeUnit.DAYS);
+                user.setToken(user.getToken());
+                token=user.getToken();
+            }else {
+                stringRedisTemplate.opsForValue().set(token,tpstring,2, TimeUnit.DAYS);
+                user.setToken(token);
+            }
+        }else {
+            user.setToken(token);
+            stringRedisTemplate.opsForValue().set(token,tpstring,2, TimeUnit.DAYS);
+        }
+        userDao.updateUser(user);
         if(user.getRole().equals("普通用户")||user.getRole().equals("卖家用户")){
             if(user.getRole().equals("卖家用户")){
                 List<Store> stores = storeDao.findStoreByUserid(user.getId());
                 Store store = stores.get(0);
                 String temp="可以上传商品";
-                return user.toString()+store.toString()+"主页"+temp+token;
+                return ResultDTO.ok("卖家用户"+token);
             }
-            return user.toString()+token;
+            return ResultDTO.ok("普通用户"+token);
         }else {
-            return user.toString()+"管理员页"+token;
+            return ResultDTO.ok("管理员"+token);
+        }
+        } catch (ErrorCodeException e) {
+            return ResultDTO.fail(e);
+        } catch (Exception e) {
+            return ResultDTO.fail(CommonErrorCode.UNKOWN_ERROR);
         }
     }
 
@@ -193,39 +209,59 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultDTO findUserByOpenid(LoginDTO loginDTO) {
-//        try {
+        try {
             User user;
-            Integer integer =0;
+            Integer integer =0,num=0;
+            String value ="";
             SessionDTO sessionDTO = wechatAdapter.jscode2session(loginDTO.getCode());
 
-            String token = UUID.randomUUID().toString();
             List<User> users = userDao.findUserByOpenId(sessionDTO.getOpenid());
+            String token = UUID.randomUUID().toString();
             if (CollectionUtils.isEmpty(users)) {
                 user = new User();
                 user.setToken(token);
                 user.setOpenId(sessionDTO.getOpenid());
                 integer=userDao.addUser(user);
+                num=1;
             }else {
                 user=users.get(0);
-                user.setToken(token);
+                if(!StringUtils.isEmpty(user.getToken())){
+                    value= stringRedisTemplate.opsForValue().get(user.getToken());
+                    if(StringUtils.isEmpty(value)){
+                        user.setToken(token);
+                        num=1;
+                    }else {
+                        user.setToken(user.getToken());
+                        num=2;
+                    }
+                }else {
+                    user.setToken(token);
+                    num=1;
+                }
                 user.setOpenId(sessionDTO.getOpenid());
                 integer=userDao.updateUser(user);
+
             }
             if (integer == 1) {
                 String tpstring=JsonUtils.objectToJson(user);
-                stringRedisTemplate.opsForValue().set(token,tpstring,2, TimeUnit.DAYS);
+                if(num==1){
+                    stringRedisTemplate.opsForValue().set(token,tpstring,2, TimeUnit.DAYS);
+                }else if(num==2){
+                    stringRedisTemplate.opsForValue().set(user.getToken(),tpstring,2, TimeUnit.DAYS);
+                    token=user.getToken();
+                }
+
                 return ResultDTO.ok(token);
             } else {
                 return ResultDTO.fail(CommonErrorCode.UNKOWN_ERROR);
             }
-//        } catch (ErrorCodeException e) {
-//            log.error("login error, info : {}", loginDTO, e.getMessage());
-//            return ResultDTO.fail(e);
-//        } catch (Exception e) {
-//            log.error("login error, info : {}", loginDTO, e);
-//            return ResultDTO.fail(CommonErrorCode.UNKOWN_ERROR);
-//        }
-
+        } catch (ErrorCodeException e) {
+            log.error("login error, info : {}", loginDTO, e.getMessage());
+            return ResultDTO.fail(e);
+        } catch (Exception e) {
+            log.error("login error, info : {}", loginDTO, e);
+            return ResultDTO.fail(CommonErrorCode.UNKOWN_ERROR);
+        }
     }
 
     @Override

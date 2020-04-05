@@ -41,6 +41,7 @@ public class ProductsServiceImpl implements ProductsService {
     public Integer addProducts(AddProductsRequest apr) {
         User user = SessionUtil.getUser();
         Store store;
+        System.out.println(user.getRole());
         if(user.getRole().equals("卖家用户")||user.getRole().equals("管理员")){
             List<Store> stores = storeDao.findStoreByUserid(user.getId());
             if(CollectionUtils.isEmpty(stores)){

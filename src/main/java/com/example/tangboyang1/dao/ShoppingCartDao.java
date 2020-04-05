@@ -8,6 +8,7 @@ import com.example.tangboyang1.pojo.ShoppingCartExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -53,15 +54,12 @@ public class ShoppingCartDao {
     /*通过id减少购物车产品的数量*/
     public Integer updateReducePNum(int num,Integer id) {
         ShoppingCart shoppingCart = shoppingCartMapper.selectByPrimaryKey(id);
-
         if(shoppingCart.getNum()>num&&shoppingCart.getNum()>0){
-
             shoppingCart.setNum(shoppingCart.getNum()-num);
-
             Products products = productsMapper.selectByPrimaryKey(shoppingCart.getProductsId());
 
-            shoppingCart.setMuney(shoppingCart.getMuney()-products.getPrice()*num);
-            shoppingCart.setCreattime(new Date());
+            shoppingCart.setMuney(shoppingCart.getMuney()- transDouble(products.getPrice()*num));
+//            shoppingCart.setCreattime(new Date());
             products.setPnum(products.getPnum()+num);
             if(shoppingCart.getNum()==0){
                 return shoppingCartMapper.deleteByPrimaryKey(shoppingCart.getId());
@@ -81,8 +79,8 @@ public class ShoppingCartDao {
         if (products.getPnum() > num && products.getPnum() > 0) {
             products.setPnum(products.getPnum() - num);
             shoppingCart.setNum(shoppingCart.getNum() + num);
-            shoppingCart.setMuney(shoppingCart.getMuney() + num * products.getPrice());
-            shoppingCart.setCreattime(new Date());
+            shoppingCart.setMuney(shoppingCart.getMuney() + transDouble(num * products.getPrice()));
+//            shoppingCart.setCreattime(new Date());
             productsMapper.updateByPrimaryKey(products);
         } else {
             new Exception("数量不对");
@@ -90,4 +88,20 @@ public class ShoppingCartDao {
 
         return shoppingCartMapper.updateByPrimaryKey(shoppingCart);
     }
+
+    public ShoppingCart findShopcartByUseridAndProductid(Integer id, Integer productsId) {
+//        ShoppingCartExample shoppingCartExample=new ShoppingCartExample();
+//        shoppingCartExample.createCriteria().andUserIdEqualTo(id);
+//        shoppingCartExample.createCriteria().andProductsIdEqualTo(productsId);
+        return shoppingCartMapper.findShopcartByUseridAndProductid(id,productsId);
+
+    }
+
+    public Double transDouble (Double d){
+        DecimalFormat num = new DecimalFormat("#.00");
+        String random=num.format(d);
+        double n=Double.parseDouble(random);
+        return n;
+    }
+
 }

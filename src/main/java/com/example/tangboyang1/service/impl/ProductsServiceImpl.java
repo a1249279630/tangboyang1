@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.*;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,17 +45,20 @@ public class ProductsServiceImpl implements ProductsService {
 
         String imgurs = apr.getImgurl();
         String[] split = imgurs.split("\\,");
+
         String uuid=UUID.randomUUID().toString();
+        Integer num1=1;
         for (String s:split) {
             Image image=new Image();
             image.setProductsUuid(uuid);
+            image.setImagurlNum(num1++);
             image.setImagurl(s);
             imageDao.AddImage(image);
         }
         products.setCategory(apr.getCategory());
         products.setPnum(apr.getPnum());
         products.setDescription(apr.getDescription());
-        products.setImgurl(String.valueOf(split.length));
+        products.setImgurl(split[0]);
         products.setName(apr.getName());
         products.setPrice(apr.getPrice());
         products.setCreattime(new Date());
@@ -186,7 +188,7 @@ public class ProductsServiceImpl implements ProductsService {
                 List<FindImageResponse> findImageResponses=new ArrayList<>();
                 for (Image f:images) {
                     FindImageResponse findImageResponse=new FindImageResponse();
-                    findImageResponse.setId(f.getId());
+                    findImageResponse.setId(f.getImagurlNum());
                     findImageResponse.setImagurl(f.getImagurl());
                     findImageResponses.add(findImageResponse);
                 }
